@@ -1,5 +1,7 @@
 # Flask-MongoDB Web App
 
-In this assignment you will create a web app that relies upon a MongoDB database.
+## APP Title
+inventory
 
-Replace the contents of this file with a description of your own web app, as described in [the instructions](./instructions.md).
+
+https://i6.cims.nyu.edu/~jj3174/7-web-app-MichaelJiang/flask.cgi

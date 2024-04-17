@@ -1,14 +1,18 @@
 {% extends 'base.html' %} {% block container %}
 <h2>Update</h2>
-<p>Edit a record in the MongoDB database collection.</p>
-<form method="POST" action="{{ url_for('edit_post', mongoid=mongoid) }}">
+<p>Edit a product in the inventory.</p>
+<form method="POST" action="{{ url_for('update_item', item_id=item._id) }}">
   <p>
-    Your name:
-    <input type="text" id="fname" name="fname" value="{{doc.name}}" /><br />
+    Product Name: 
+    <input type="text" id="name" name="name" value="{{ item.name }}" /><br />
   </p>
   <p>
-    Message:
-    <textarea id="fmessage" name="fmessage">{{doc.message}}</textarea>
+    Quantity: 
+    <input type="number" id="quantity" name="quantity" value="{{ item.quantity }}" />
+  </p>
+  <p>
+    Price: 
+    <input type="text" id="price" name="price" value="{{ item.price }}" />
   </p>
   <p>
     <a href="{{ url_for('read')}}">Cancel</a>

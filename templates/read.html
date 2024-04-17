@@ -1,22 +1,21 @@
 {% extends 'base.html' %}
 
 {% block container %}
-<h2>Read</h2>
-<p>This page shows information pulled from a MongoDB database collection.
+<h2>Current Inventory</h2>
+<p>This page shows all inventory items
         
-    {% for doc in docs %}
+    {% for item in items %}
     <div>
         <hr class="solid">
-        <p class="post">
-            Posted by {{doc.name}} at {{ doc.created_at.strftime("%H:%M on %d %B %Y") }}
-            <br/>
-            <a href="{{ url_for('edit',mongoid=doc._id)}}">Edit</a> | <a href="{{ url_for('delete',mongoid=doc._id)}}">Delete</a>
-            <br/>
-        </p>
         <p>
-            {{ doc.message }}
+            Name: {{ item.name }}<br>
+            Quantity: {{ item.quantity }}<br>
+            Price: ${{ item.price }}<br>
+            <a href="{{ url_for('update_item', item_id=item._id) }}">Edit</a> |
+            <a href="{{ url_for('delete_item', item_id=item._id) }}">Delete</a>
         </p>
-            
+            {{ doc.message }}
+        </p> 
     </div>
     {%endfor%}
 </p>

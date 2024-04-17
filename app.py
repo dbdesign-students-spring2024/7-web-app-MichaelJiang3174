@@ -4,8 +4,9 @@ import os
 import sys
 import subprocess
 import datetime
+import time
 
-from flask import Flask, render_template, request, redirect, url_for, make_response
+from flask import  Flask, render_template, request, redirect, url_for, make_response
 
 # import logging
 import sentry_sdk
@@ -63,7 +64,6 @@ except ConnectionFailure as e:
 
 # set up the routes
 
-
 @app.route("/")
 def home():
     """
@@ -79,95 +79,44 @@ def read():
     Route for GET requests to the read page.
     Displays some information for the user with links to other pages.
     """
-    docs = db.exampleapp.find({}).sort(
+    items = db.inventory.find({}).sort(
         "created_at", -1
     )  # sort in descending order of created_at timestamp
-    return render_template("read.html", docs=docs)  # render the read template
+    return render_template("read.html", items=items)  # render the read template
 
 
-@app.route("/create")
-def create():
-    """
-    Route for GET requests to the create page.
-    Displays a form users can fill out to create a new document.
-    """
-    return render_template("create.html")  # render the create template
+@app.route('/add', methods=['GET', 'POST'])
+def add_item():
+    # Add a new inventory item
+    if request.method == 'POST':
+        item_data = {
+            'name': request.form['name'],
+            'quantity': int(request.form['quantity']),
+            'price': float(request.form['price'])
+        }
+        db.inventory.insert_one(item_data)
+        return redirect(url_for('index'))
+    return render_template('add_item.html')
 
+@app.route('/update/<item_id>', methods=['GET', 'POST'])
+def update_item(item_id):
+    # Update an existing inventory item
+    item = db.inventory.find_one({'_id': ObjectId(item_id)})
+    if request.method == 'POST':
+        update_data = {
+            'name': request.form['name'],
+            'quantity': int(request.form['quantity']),
+            'price': float(request.form['price'])
+        }
+        db.inventory.update_one({'_id': ObjectId(item_id)}, {'$set': update_data})
+        return redirect(url_for('index'))
+    return render_template('update_item.html', item=item)
 
-@app.route("/create", methods=["POST"])
-def create_post():
-    """
-    Route for POST requests to the create page.
-    Accepts the form submission data for a new document and saves the document to the database.
-    """
-    name = request.form["fname"]
-    message = request.form["fmessage"]
-
-    # create a new document with the data the user entered
-    doc = {"name": name, "message": message, "created_at": datetime.datetime.utcnow()}
-    db.exampleapp.insert_one(doc)  # insert a new document
-
-    return redirect(
-        url_for("read")
-    )  # tell the browser to make a request for the /read route
-
-
-@app.route("/edit/<mongoid>")
-def edit(mongoid):
-    """
-    Route for GET requests to the edit page.
-    Displays a form users can fill out to edit an existing record.
-
-    Parameters:
-    mongoid (str): The MongoDB ObjectId of the record to be edited.
-    """
-    doc = db.exampleapp.find_one({"_id": ObjectId(mongoid)})
-    return render_template(
-        "edit.html", mongoid=mongoid, doc=doc
-    )  # render the edit template
-
-
-@app.route("/edit/<mongoid>", methods=["POST"])
-def edit_post(mongoid):
-    """
-    Route for POST requests to the edit page.
-    Accepts the form submission data for the specified document and updates the document in the database.
-
-    Parameters:
-    mongoid (str): The MongoDB ObjectId of the record to be edited.
-    """
-    name = request.form["fname"]
-    message = request.form["fmessage"]
-
-    doc = {
-        # "_id": ObjectId(mongoid),
-        "name": name,
-        "message": message,
-        "created_at": datetime.datetime.utcnow(),
-    }
-
-    db.exampleapp.update_one(
-        {"_id": ObjectId(mongoid)}, {"$set": doc}  # match criteria
-    )
-
-    return redirect(
-        url_for("read")
-    )  # tell the browser to make a request for the /read route
-
-
-@app.route("/delete/<mongoid>")
-def delete(mongoid):
-    """
-    Route for GET requests to the delete page.
-    Deletes the specified record from the database, and then redirects the browser to the read page.
-
-    Parameters:
-    mongoid (str): The MongoDB ObjectId of the record to be deleted.
-    """
-    db.exampleapp.delete_one({"_id": ObjectId(mongoid)})
-    return redirect(
-        url_for("read")
-    )  # tell the web browser to make a request for the /read route.
+@app.route('/delete/<item_id>')
+def delete_item(item_id):
+    # Delete an inventory item
+    db.inventory.delete_one({'_id': ObjectId(item_id)})
+    return redirect(url_for('index'))
 
 
 @app.route("/webhook", methods=["POST"])
