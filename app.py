@@ -64,9 +64,9 @@ def read():
     items = db.inventory.find({}).sort(
         "created_at", -1
     )  # sort in descending order of created_at timestamp
+    items = list(items)
     return render_template("read.html", items=items)  # render the read template
-
-
+    
 @app.route('/add', methods=['GET', 'POST'])
 def add_item():
     # Add a new inventory item
@@ -77,8 +77,8 @@ def add_item():
             'price': float(request.form['price'])
         }
         db.inventory.insert_one(item_data)
-        return redirect(url_for('index'))
-    return render_template('add_item.html')
+        return redirect(url_for('read'))
+    return render_template('create.html')
 
 @app.route('/update/<item_id>', methods=['GET', 'POST'])
 def update_item(item_id):
@@ -91,14 +91,14 @@ def update_item(item_id):
             'price': float(request.form['price'])
         }
         db.inventory.update_one({'_id': ObjectId(item_id)}, {'$set': update_data})
-        return redirect(url_for('index'))
-    return render_template('update_item.html', item=item)
+        return redirect(url_for('read'))  # Redirect to the 'read' endpoint
+    return render_template('edit.html', item=item)
 
 @app.route('/delete/<item_id>')
 def delete_item(item_id):
     # Delete an inventory item
     db.inventory.delete_one({'_id': ObjectId(item_id)})
-    return redirect(url_for('index'))
+    return redirect(url_for('read'))  # Redirect to the 'read' endpoint
 
 
 @app.route("/webhook", methods=["POST"])
