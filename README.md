@@ -36,4 +36,4 @@ The user can also edit and delete the items from the collection
 ![edit](./images/Edit_Delete.jpg)
 
 ## Link to my local APP
-[Link to my local app](http://127.0.0.1:5020/read).
+[Link to my local app](http://127.0.0.1:5020).
