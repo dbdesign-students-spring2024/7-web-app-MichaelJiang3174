@@ -18,3 +18,5 @@ Link to the inventory app: [Link of Inventory Management System Live](https://i6
 - **Delete**: Remove products that are out of stock or discontinued.
 
 ## All of the work is done by myself
+
+## I am not be able to host on web server. I will keep trying and go to office hour for help.
