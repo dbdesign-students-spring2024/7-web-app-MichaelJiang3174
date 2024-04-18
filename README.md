@@ -20,4 +20,20 @@ Link to the inventory app: [Link of Inventory Management System Live](https://i6
 ## All of the work is done by myself
 
 ## I am not be able to host on web server. I will keep trying and go to office hour for help.
-To prove I run it on my own 
+To prove I run it locally, below is the demonstration of my app.
+
+### Home (The home page for the app)
+![Home](./images/Home.jpg)
+
+### Create inventory (The page for adding items into the collection)
+![Create](./images/Create.jpg)
+
+### Current inventory (The page for showing the current inventory)
+![inventory](./images/Current_Inventory.jpg)
+The user can also edit and delete the items from the collection
+
+### Edit (The page for editing)
+![edit](./images/Edit_Delete.jpg)
+
+## Link to my local APP
+[Link to my local app](http://127.0.0.1:5020/read).
